@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using TOSCore.Models;
 
 namespace TOSCore.Context
 {
@@ -36,6 +37,8 @@ namespace TOSCore.Context
         public virtual DbSet<TInventory> TInventories { get; set; } = null!;
         public virtual DbSet<TOrderDetail> TOrderDetails { get; set; } = null!;
         public virtual DbSet<TOrderHeader> TOrderHeaders { get; set; } = null!;
+
+        //public virtual DbSet<TInformationModel> GetEmployeesWithDepartment_Results { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -896,6 +899,23 @@ namespace TOSCore.Context
                     .IsUnicode(false)
                     .HasColumnName("ZipCD2");
             });
+
+            //modelBuilder.Entity<TInformationModel>(entity =>
+            //{
+            //    entity.HasKey(e => e.TitleName);
+
+            //    //entity.Property(e => e.Date).HasColumnType("datetime");
+
+            //    entity.Property(e => e.TitleName)
+            //        .HasMaxLength(150)
+            //        .IsUnicode(false)
+            //        .HasColumnName("TitleName");
+
+            //    entity.Property(e => e.InfoClass)
+            //        .HasMaxLength(50)
+            //        .IsUnicode(false)
+            //        .HasColumnName("InfoClass");
+            //});
 
             OnModelCreatingPartial(modelBuilder);
         }
