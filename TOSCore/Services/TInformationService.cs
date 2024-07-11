@@ -25,9 +25,11 @@ namespace TOSCore.Services
             {
                 TInfoList.Add(new TInformationModel
                 {
-                    Date = rdr.GetString(0),
-                    TitleName = rdr.GetString(1),
-                    InfoClass = rdr.GetString(2)
+                    Date = rdr["Date"].ToString(),
+                    TitleName = rdr["TitleName"].ToString(),
+                    InfoText = rdr["InfoText"].ToString(),
+                    InfoClass=rdr["InfoClass"].ToString(),
+                    InformationID= Convert.ToInt32(rdr["InformationID"].ToString())
                 });
             }
             return TInfoList;
