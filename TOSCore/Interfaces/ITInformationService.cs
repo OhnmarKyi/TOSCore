@@ -8,6 +8,7 @@ namespace TOSCore.Interfaces
 {
     public interface ITInformationService
     {
-        public Task<List<TInformationModel>> GetInformation(string CompanyCD);       
+        public Task<List<TInformationModel>> GetInformation(string CompanyCD);
+        public Task<TInformationModel> GetInformationDetails(string id);
     }
 }

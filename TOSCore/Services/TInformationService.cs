@@ -4,6 +4,7 @@ using System.Data.Common;
 using System.Data;
 using TOSCore.Models;
 using TOSCore.Context;
+using System.Reflection.PortableExecutable;
 
 namespace TOSCore.Services
 {
@@ -33,6 +34,37 @@ namespace TOSCore.Services
                 });
             }
             return TInfoList;
+        }
+
+        public async Task<TInformationModel> GetInformationDetails(string id)
+        {
+            int infoID = Convert.ToInt32(id);
+            TInformationModel? tinfo = new TInformationModel();
+
+            DbCommand cmd = _context.Database.GetDbConnection().CreateCommand(); ;
+            DbDataReader rdr;
+            string sql = "Select_InformationTitle";
+            cmd.CommandText = sql;
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.Add(new SqlParameter("InformationID", infoID));
+            _context.Database.OpenConnection();
+            rdr = await cmd.ExecuteReaderAsync();
+            while (rdr.Read())
+            {
+                tinfo.TitleName = rdr.GetString(0);
+                string dt = rdr.GetString(1);
+                tinfo.Date = dt;
+                tinfo.DetailInformation = rdr.GetString(2);
+                if (!rdr.IsDBNull(3))
+                    tinfo.AttachedFile1 = rdr.GetString(3);
+                if (!rdr.IsDBNull(4))
+                    tinfo.AttachedFile2 = rdr.GetString(4);
+                if (!rdr.IsDBNull(5))
+                    tinfo.AttachedFile3 = rdr.GetString(5);
+                if (!rdr.IsDBNull(6))
+                    tinfo.AttachedFile4 = rdr.GetString(6);
+            }            
+            return tinfo;
         }
     }
 }

@@ -19,5 +19,6 @@ namespace TOSCore.Services
             MCompany company =await _context.MCompanies.Where<MCompany>(x => x.CompanyCd == com.CompanyCd && x.Password == com.Password).SingleOrDefaultAsync();
             return company;
         } 
+
     }
 }
