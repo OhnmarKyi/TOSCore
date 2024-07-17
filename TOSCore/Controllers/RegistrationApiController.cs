@@ -20,10 +20,14 @@ namespace TOSCore.Controllers
         [EnableCors("_myAllowSpecificOrigins")]
         [HttpGet("GetGroupView")]
         public async Task<List<GroupModel>> GetGroupView()
-        [HttpGet("GetBrandList")]
-        public async Task<List<MBrand>> GetBrandList()
         {
             return await _service.GetGroupView();
+        }
+
+        [EnableCors("_myAllowSpecificOrigins")]
+        [HttpGet("GetBrandList")]
+        public async Task<List<MBrand>> GetBrandList()
+        {            
             return await _service.GetBrand();
         }
     }
