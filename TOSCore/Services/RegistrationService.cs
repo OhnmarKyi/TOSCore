@@ -11,7 +11,6 @@ namespace TOSCore.Services
     {
         TOSContext _context = new TOSContext();
         public async Task<List<GroupModel>> GetGroupView()
-        public async Task<List<MBrand>> GetBrand()
         {
             List<GroupModel> gpInfoList = new List<GroupModel>();
             DbCommand cmd = _context.Database.GetDbConnection().CreateCommand(); ;
@@ -38,6 +37,10 @@ namespace TOSCore.Services
                 }
             }
             return gpInfoList;
+        }
+
+        public async Task<List<MBrand>> GetBrand()
+        {           
             List<MBrand> brandList = await _context.MBrands.ToListAsync();
             return brandList;
         }
