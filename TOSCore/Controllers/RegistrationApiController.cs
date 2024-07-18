@@ -30,5 +30,11 @@ namespace TOSCore.Controllers
         {            
             return await _service.GetBrand();
         }
+        [EnableCors("_myAllowSpecificOrigins")]
+        [HttpGet("GetCompanyList")]
+        public async Task<List<MCompany>> GetCompanyList()
+        {
+            return await _service.GetCompany();
+        }
     }
 }

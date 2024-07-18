@@ -44,6 +44,11 @@ namespace TOSCore.Services
             List<MBrand> brandList = await _context.MBrands.ToListAsync();
             return brandList;
         }
+        public async Task<List<MCompany>> GetCompany()
+        {
+            List<MCompany> companyList = await _context.MCompanies.ToListAsync();
+            return companyList;
+        }
 
     }
 }
