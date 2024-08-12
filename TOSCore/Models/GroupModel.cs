@@ -6,6 +6,5 @@
             public string GroupID { get; set; }
             public string GroupName { get; set; }
             public string GroupDesignation { get; set; }
-        
     }
 }
