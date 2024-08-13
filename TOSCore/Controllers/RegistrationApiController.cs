@@ -43,5 +43,15 @@ namespace TOSCore.Controllers
         {
            return _service.InsertGroupEntry(group);
         }
+
+        [EnableCors("_myAllowSpecificOrigins")]
+        [HttpPost("InsertCompany")]
+        public async Task<Boolean> InsertCompany(M_CompanyModel model)
+        {
+
+            return true;
+        }
+
+
     }
 }
