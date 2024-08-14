@@ -40,10 +40,10 @@ namespace TOSCore.Controllers
 
         [EnableCors("_myAllowSpecificOrigins")]
         [HttpPost("InsertCompany")]
-        public async Task<Boolean> InsertCompany(M_CompanyModel model)
+        public async Task<string> InsertCompany(M_CompanyModel model)
         {
-
-            return true;
+            return await _service.InsertCompany(model);
+            //return true;
         }
 
 
