@@ -37,6 +37,12 @@ namespace TOSCore.Controllers
         {
             return await _service.GetCompany();
         }
+        [EnableCors("_myAllowSpecificOrigins")]
+        [HttpPost("InsertGroupEntry")]
+        public string InsertGroupEntry(GroupModel group)
+        {
+           return _service.InsertGroupEntry(group);
+        }
 
         [EnableCors("_myAllowSpecificOrigins")]
         [HttpPost("InsertCompany")]
