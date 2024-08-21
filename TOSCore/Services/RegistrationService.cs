@@ -59,7 +59,7 @@ namespace TOSCore.Services
             string PcName = System.Environment.MachineName;
             string successflag = "success";
             Boolean duplicated = checkDuplicatedGroupId(group);
-            if(duplicated is false)
+            if(duplicated is true)
             {
                 successflag = "fail";
             }
@@ -87,12 +87,18 @@ namespace TOSCore.Services
             try
             {
                 DataTable dt = new DataTable();
+                if (!string.IsNullOrWhiteSpace(mModel.ConpanyName))
+                    mModel.GroupInfoFlg = "1";
+                else if (!string.IsNullOrWhiteSpace(mModel.BrandName))
+                    mModel.GroupInfoFlg = "2";
+                else mModel.GroupInfoFlg = "3";
+
                 //BaseDL dl = new BaseDL();
                 SqlParameter[] prms = new SqlParameter[9];
                 prms[0] = new SqlParameter("@groupID", SqlDbType.VarChar) { Value = mModel.GroupID };
                 prms[1] = new SqlParameter("@groupName", SqlDbType.VarChar) { Value = mModel.GroupName };
                 prms[2] = new SqlParameter("@groupInfoFlag", SqlDbType.VarChar) { Value = mModel.GroupInfoFlg };
-                if (mModel.ConpanyName != null)
+                if (!string.IsNullOrWhiteSpace(mModel.ConpanyName))
                 {
                     prms[3] = new SqlParameter("@companyName", SqlDbType.VarChar) { Value = mModel.ConpanyName };
                 }
@@ -100,7 +106,7 @@ namespace TOSCore.Services
                 {
                     prms[3] = new SqlParameter("@companyName", SqlDbType.VarChar) { Value = DBNull.Value };
                 }
-                if (mModel.BrandName != null)
+                if (!string.IsNullOrWhiteSpace(mModel.BrandName))
                 {
                     prms[4] = new SqlParameter("@BrandName", SqlDbType.VarChar) { Value = mModel.BrandName };
                 }
@@ -108,7 +114,7 @@ namespace TOSCore.Services
                 {
                     prms[4] = new SqlParameter("@BrandName", SqlDbType.VarChar) { Value = DBNull.Value };
                 }
-                if (mModel.TabName != null)
+                if (!string.IsNullOrWhiteSpace(mModel.TabName))
                 {
                     prms[5] = new SqlParameter("@tag", SqlDbType.VarChar) { Value = mModel.TabName };
                 }
