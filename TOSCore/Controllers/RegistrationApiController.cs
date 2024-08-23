@@ -45,14 +45,14 @@ namespace TOSCore.Controllers
         }
 
         [EnableCors("_myAllowSpecificOrigins")]
-        [HttpPost("InsertGroupEntry")]
+        [HttpGet("GetGroupData")]
         public  MGroup GetGroupData(string id )
         {
             return  _service.GetGroupData(id);
         }
 
         [EnableCors("_myAllowSpecificOrigins")]
-        [HttpGet("GetCompanyList")]
+        [HttpGet("UpdateGroupEntry")]
         public string UpdateGroupEntry(GroupModel group)
         {
             return _service.UpdateGroupEntry(group);
