@@ -54,24 +54,37 @@ namespace TOSCore.Services
             List<MCompany> companyList = await _context.MCompanies.ToListAsync();
             return companyList;
         }
+        public  MGroup GetGroupData(string id)
+        {
+            MGroup groupdata = new MGroup();
+            groupdata = _context.MGroups.Where(g => g.Equals(id)).FirstOrDefault();
+            return groupdata;
+        }
         public string InsertGroupEntry(GroupModel group)
         {
             string PcName = System.Environment.MachineName;
-            string successflag = "success";
+            string insertflag = "success";
             Boolean duplicated = checkDuplicatedGroupId(group);
             if(duplicated is true)
             {
-                successflag = "fail";
+                insertflag = "fail";
             }
            
             else
             {
-                successflag=InsertGroup(group, PcName);
+                insertflag = InsertGroup(group, PcName);
                // successflag = "success";
                
             }
-            return successflag;
+            return insertflag;
         }
+
+        public string UpdateGroupEntry(GroupModel group)
+        {
+            string updateflag = "success";
+            return updateflag ;
+        }
+
         public Boolean checkDuplicatedGroupId(GroupModel group)
         {
          Boolean dr=_context.MGroups.Select(s => s.GroupId == group.GroupID).FirstOrDefault();
