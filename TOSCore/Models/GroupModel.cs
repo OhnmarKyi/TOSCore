@@ -11,6 +11,7 @@
         public string TabName { get; set; }
         public string InsertOperator { get; set; }
         public string GroupInfoFlg { get; set; }
+        public string GroupSpecInfo {get;set;}
 
-}
+    }
 }

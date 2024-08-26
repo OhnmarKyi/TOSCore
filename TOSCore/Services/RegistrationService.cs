@@ -3,10 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
 using System.Data;
 using TOSCore.Context;
+using Newtonsoft.Json;
 using TOSCore.Models;
 using System.Buffers.Text;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using System.Xml.Linq;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime;
 
 namespace TOSCore.Services
 {
@@ -54,11 +57,29 @@ namespace TOSCore.Services
             List<MCompany> companyList = await _context.MCompanies.ToListAsync();
             return companyList;
         }
-        public  MGroup GetGroupData(string id)
+        public GroupModel GetGroupData(string id)
         {
-            MGroup groupdata = new MGroup();
-            groupdata = _context.MGroups.Where(g => g.Equals(id)).FirstOrDefault();
-            return groupdata;
+            GroupModel gmodel = new GroupModel();
+            DataTable dt = new DataTable();
+            SqlParameter[] prms = new SqlParameter[2];
+            prms[0] = new SqlParameter("@id", SqlDbType.VarChar) { Value = id };
+            prms[1] = new SqlParameter("@option", SqlDbType.VarChar) { Value = 2 };
+           dt= dl.SelectData("Group_View_Select", prms);
+           
+
+            if(dt.Rows.Count>0)
+            {
+                gmodel.GroupID = dt.Rows[0]["GroupID"].ToString();
+                gmodel.GroupName = dt.Rows[0]["GroupName"].ToString();
+                gmodel.GroupSpecInfo = dt.Rows[0]["GroupSpecInfo"].ToString();
+
+                return gmodel;              
+
+            }
+            else           
+          
+
+            return null ;
         }
         public string InsertGroupEntry(GroupModel group)
         {

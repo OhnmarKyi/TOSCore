@@ -46,7 +46,7 @@ namespace TOSCore.Controllers
 
         [EnableCors("_myAllowSpecificOrigins")]
         [HttpGet("GetGroupData")]
-        public  MGroup GetGroupData(string id )
+        public GroupModel GetGroupData(string id )
         {
             return  _service.GetGroupData(id);
         }
