@@ -52,7 +52,7 @@ namespace TOSCore.Controllers
         }
 
         [EnableCors("_myAllowSpecificOrigins")]
-        [HttpGet("UpdateGroupEntry")]
+        [HttpPost("UpdateGroupEntry")]
         public string UpdateGroupEntry(GroupModel group)
         {
             return _service.UpdateGroupEntry(group);

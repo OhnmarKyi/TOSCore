@@ -71,14 +71,14 @@ namespace TOSCore.Services
             {
                 gmodel.GroupID = dt.Rows[0]["GroupID"].ToString();
                 gmodel.GroupName = dt.Rows[0]["GroupName"].ToString();
+                gmodel.GroupInfoFlg = dt.Rows[0]["GroupInfoFlg"].ToString();
                 gmodel.GroupSpecInfo = dt.Rows[0]["GroupSpecInfo"].ToString();
 
                 return gmodel;              
 
             }
-            else           
-          
-
+            else    
+                
             return null ;
         }
         public string InsertGroupEntry(GroupModel group)
@@ -102,7 +102,8 @@ namespace TOSCore.Services
 
         public string UpdateGroupEntry(GroupModel group)
         {
-            string updateflag = "success";
+            string updateflag = "fail";
+            updateflag = UpdateGroup(group);
             return updateflag ;
         }
 
@@ -168,6 +169,60 @@ namespace TOSCore.Services
                 return "fail";
             }
 
+        }
+
+        public string UpdateGroup(GroupModel mModel)
+        {
+
+            try
+            {
+                DataTable dt = new DataTable();
+                if (!string.IsNullOrWhiteSpace(mModel.ConpanyName))
+                    mModel.GroupInfoFlg = "1";
+                else if (!string.IsNullOrWhiteSpace(mModel.BrandName))
+                    mModel.GroupInfoFlg = "2";
+                else mModel.GroupInfoFlg = "3";
+
+                //BaseDL dl = new BaseDL();
+                SqlParameter[] prms = new SqlParameter[9];
+                prms[0] = new SqlParameter("@groupID", SqlDbType.VarChar) { Value = mModel.GroupID };
+                prms[1] = new SqlParameter("@groupName", SqlDbType.VarChar) { Value = mModel.GroupName };
+                prms[2] = new SqlParameter("@groupInfoFlag", SqlDbType.VarChar) { Value = mModel.GroupInfoFlg };
+                if (!string.IsNullOrWhiteSpace(mModel.ConpanyName))
+                {
+                    prms[3] = new SqlParameter("@companyName", SqlDbType.VarChar) { Value = mModel.ConpanyName };
+                }
+                else
+                {
+                    prms[3] = new SqlParameter("@companyName", SqlDbType.VarChar) { Value = DBNull.Value };
+                }
+                if (!string.IsNullOrWhiteSpace(mModel.BrandName))
+                {
+                    prms[4] = new SqlParameter("@BrandName", SqlDbType.VarChar) { Value = mModel.BrandName };
+                }
+                else
+                {
+                    prms[4] = new SqlParameter("@BrandName", SqlDbType.VarChar) { Value = DBNull.Value };
+                }
+                if (!string.IsNullOrWhiteSpace(mModel.TabName))
+                {
+                    prms[5] = new SqlParameter("@tag", SqlDbType.VarChar) { Value = mModel.TabName };
+                }
+                else
+                {
+                    prms[5] = new SqlParameter("@tag", SqlDbType.VarChar) { Value = DBNull.Value };
+                }
+                prms[6] = new SqlParameter("@AccessPC", SqlDbType.VarChar) { Value = System.Environment.MachineName };
+                prms[7] = new SqlParameter("@insertOperator", SqlDbType.VarChar) { Value = mModel.InsertOperator };
+                prms[8] = new SqlParameter("@saveUpdateFlag", SqlDbType.VarChar) { Value = "Update" };
+                dl.InsertUpdateDeleteData("Group_Entry_Insert", prms);
+                return "success";
+            }
+            catch (Exception ex)
+            {
+                string aa = ex.Message;
+                return "fail";
+            }
         }
 
         public async Task<string> InsertCompany(M_CompanyModel mModel)
