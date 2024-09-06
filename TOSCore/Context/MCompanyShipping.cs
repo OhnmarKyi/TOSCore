@@ -5,7 +5,7 @@ namespace TOSCore.Context
 {
     public partial class MCompanyShipping
     {
-        public string? CompanyCd { get; set; }
+        public string CompanyCd { get; set; } = null!;
         public int ShippingId { get; set; }
         public string? ShippingName { get; set; }
         public string? ZipCd1 { get; set; }

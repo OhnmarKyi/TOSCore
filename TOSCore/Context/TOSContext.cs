@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using TOSCore.Models;
 
 namespace TOSCore.Context
 {
@@ -38,16 +37,14 @@ namespace TOSCore.Context
         public virtual DbSet<TOrderDetail> TOrderDetails { get; set; } = null!;
         public virtual DbSet<TOrderHeader> TOrderHeaders { get; set; } = null!;
 
-        //public virtual DbSet<TInformationModel> GetEmployeesWithDepartment_Results { get; set; } = null!;
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
                 IConfigurationRoot configuration = new ConfigurationBuilder()
-                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                .AddJsonFile("appsettings.json")
-                .Build();
+                 .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                 .AddJsonFile("appsettings.json")
+                 .Build();
                 optionsBuilder.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
             }
         }
@@ -125,7 +122,7 @@ namespace TOSCore.Context
                 entity.ToTable("M_Company");
 
                 entity.Property(e => e.CompanyCd)
-                    .HasMaxLength(8)
+                    .HasMaxLength(13)
                     .IsUnicode(false)
                     .HasColumnName("CompanyCD");
 
@@ -138,7 +135,7 @@ namespace TOSCore.Context
                     .IsUnicode(false);
 
                 entity.Property(e => e.CompanyName)
-                    .HasMaxLength(50)
+                    .HasMaxLength(80)
                     .IsUnicode(false);
 
                 entity.Property(e => e.FaxNo)
@@ -160,7 +157,7 @@ namespace TOSCore.Context
                     .IsUnicode(false);
 
                 entity.Property(e => e.ShortName)
-                    .HasMaxLength(30)
+                    .HasMaxLength(80)
                     .IsUnicode(false);
 
                 entity.Property(e => e.TelephoneNo)
@@ -212,9 +209,16 @@ namespace TOSCore.Context
 
             modelBuilder.Entity<MCompanyShipping>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => new { e.CompanyCd, e.ShippingId });
 
                 entity.ToTable("M_CompanyShipping");
+
+                entity.Property(e => e.CompanyCd)
+                    .HasMaxLength(8)
+                    .IsUnicode(false)
+                    .HasColumnName("CompanyCD");
+
+                entity.Property(e => e.ShippingId).HasColumnName("ShippingID");
 
                 entity.Property(e => e.Address1)
                     .HasMaxLength(100)
@@ -223,11 +227,6 @@ namespace TOSCore.Context
                 entity.Property(e => e.Address2)
                     .HasMaxLength(100)
                     .IsUnicode(false);
-
-                entity.Property(e => e.CompanyCd)
-                    .HasMaxLength(8)
-                    .IsUnicode(false)
-                    .HasColumnName("CompanyCD");
 
                 entity.Property(e => e.FaxNo)
                     .HasMaxLength(15)
@@ -239,8 +238,6 @@ namespace TOSCore.Context
                 entity.Property(e => e.InsertOperator)
                     .HasMaxLength(10)
                     .IsUnicode(false);
-
-                entity.Property(e => e.ShippingId).HasColumnName("ShippingID");
 
                 entity.Property(e => e.ShippingName)
                     .HasMaxLength(50)
@@ -380,11 +377,11 @@ namespace TOSCore.Context
                     .HasColumnName("BrandCD");
 
                 entity.Property(e => e.CatelogNo)
-                    .HasMaxLength(20)
+                    .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.GeneralClassName)
-                    .HasMaxLength(20)
+                    .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.ImageName)
@@ -504,8 +501,7 @@ namespace TOSCore.Context
                 entity.Property(e => e.Key)
                     .HasMaxLength(4)
                     .IsUnicode(false)
-                    .HasColumnName("KEY")
-                    .UseCollation("Latin1_General_CI_AS");
+                    .HasColumnName("KEY");
 
                 entity.Property(e => e.Num1).HasColumnType("decimal(18, 2)");
 
@@ -543,13 +539,11 @@ namespace TOSCore.Context
 
             modelBuilder.Entity<MPrice>(entity =>
             {
-                entity.HasKey(e => e.MakerItemAdminCd);
+                entity.HasKey(e => new { e.MakerItemAdminCd, e.RankingFlg });
 
                 entity.ToTable("M_Price");
 
-                entity.Property(e => e.MakerItemAdminCd)
-                    .ValueGeneratedNever()
-                    .HasColumnName("MakerItemAdminCD");
+                entity.Property(e => e.MakerItemAdminCd).HasColumnName("MakerItemAdminCD");
 
                 entity.Property(e => e.InsertDateTime).HasColumnType("datetime");
 
@@ -629,8 +623,7 @@ namespace TOSCore.Context
                 entity.Property(e => e.Key)
                     .HasMaxLength(4)
                     .IsUnicode(false)
-                    .HasColumnName("KEY")
-                    .UseCollation("Latin1_General_CI_AS");
+                    .HasColumnName("KEY");
 
                 entity.Property(e => e.Message1)
                     .HasMaxLength(100)
@@ -899,23 +892,6 @@ namespace TOSCore.Context
                     .IsUnicode(false)
                     .HasColumnName("ZipCD2");
             });
-
-            //modelBuilder.Entity<TInformationModel>(entity =>
-            //{
-            //    entity.HasKey(e => e.TitleName);
-
-            //    //entity.Property(e => e.Date).HasColumnType("datetime");
-
-            //    entity.Property(e => e.TitleName)
-            //        .HasMaxLength(150)
-            //        .IsUnicode(false)
-            //        .HasColumnName("TitleName");
-
-            //    entity.Property(e => e.InfoClass)
-            //        .HasMaxLength(50)
-            //        .IsUnicode(false)
-            //        .HasColumnName("InfoClass");
-            //});
 
             OnModelCreatingPartial(modelBuilder);
         }

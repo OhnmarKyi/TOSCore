@@ -46,12 +46,30 @@ namespace TOSCore.Controllers
 
         [EnableCors("_myAllowSpecificOrigins")]
         [HttpPost("InsertCompany")]
-        public async Task<string> InsertCompany(M_CompanyModel model)
+        public async Task<int> InsertCompany(M_CompanyModel model)
         {
             return await _service.InsertCompany(model);
-            //return true;
         }
 
+        [EnableCors("_myAllowSpecificOrigins")]
+        [HttpGet("GetCompanyViewList")]
+        public async Task<List<CompanyViewModel>> GetCompanyViewList()
+        {
+            return await _service.GetCompanyViewList();
+        }
 
+        [EnableCors("_myAllowSpecificOrigins")]
+        [HttpGet("CompanyUpdate_View_Delete")]
+        public async Task<Boolean> CompanyUpdate_View_Delete(string CompanyCD,string AccessPC)
+        {
+            return await _service.CompanyUpdate_View_Delete(CompanyCD, AccessPC);
+        }
+
+        [EnableCors("_myAllowSpecificOrigins")]
+        [HttpGet("CompanyView_Edit")]
+        public async Task<M_CompanyModel> CompanyView_Edit(string CompanyCD)
+        {
+            return await _service.CompanyView_Edit(CompanyCD);
+        }
     }
 }

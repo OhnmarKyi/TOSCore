@@ -6,6 +6,8 @@ using TOSCore.Context;
 using TOSCore.Models;
 using System.Buffers.Text;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+
 namespace TOSCore
 {
     public class TOS_DL
@@ -20,8 +22,7 @@ namespace TOSCore
             cmd.Parameters.AddRange(para);
             _context.Database.OpenConnection();
             cmd.ExecuteNonQuery();
-
         }
-
+       
     }
 }
