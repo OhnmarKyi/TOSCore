@@ -3,10 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
 using System.Data;
 using TOSCore.Context;
+using Newtonsoft.Json;
 using TOSCore.Models;
 using System.Buffers.Text;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using System.Xml.Linq;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime;
 
 namespace TOSCore.Services
 {
@@ -54,22 +57,56 @@ namespace TOSCore.Services
             List<MCompany> companyList = await _context.MCompanies.ToListAsync();
             return companyList;
         }
+        public GroupModel GetGroupData(string id)
+        {
+            GroupModel gmodel = new GroupModel();
+            DataTable dt = new DataTable();
+            SqlParameter[] prms = new SqlParameter[2];
+            prms[0] = new SqlParameter("@id", SqlDbType.VarChar) { Value = id };
+            prms[1] = new SqlParameter("@option", SqlDbType.VarChar) { Value = 2 };
+           dt= dl.SelectData("Group_View_Select", prms);
+           
+
+            if(dt.Rows.Count>0)
+            {
+                gmodel.GroupID = dt.Rows[0]["GroupID"].ToString();
+                gmodel.GroupName = dt.Rows[0]["GroupName"].ToString();
+                gmodel.GroupInfoFlg = dt.Rows[0]["GroupInfoFlg"].ToString();
+                gmodel.GroupSpecInfo = dt.Rows[0]["GroupSpecInfo"].ToString();
+
+                return gmodel;              
+
+            }
+            else    
+                
+            return null ;
+        }
         public string InsertGroupEntry(GroupModel group)
         {
             string PcName = System.Environment.MachineName;
-            string successflag = "success";
+            string insertflag = "success";
             Boolean duplicated = checkDuplicatedGroupId(group);
-            if(duplicated is false)
+            if(duplicated is true)
             {
-                successflag = "fail";
+                insertflag = "fail";
             }
            
             else
             {
-                successflag=InsertGroup(group, PcName);
+                insertflag = InsertGroup(group, PcName);
+               // successflag = "success";
+               
             }
-            return successflag;
+            return insertflag;
         }
+
+        public string UpdateGroupEntry(GroupModel group)
+        {
+            string updateflag = "fail";
+            updateflag = UpdateGroup(group);
+            return updateflag ;
+        }
+
         public Boolean checkDuplicatedGroupId(GroupModel group)
         {
          Boolean dr=_context.MGroups.Select(s => s.GroupId == group.GroupID).FirstOrDefault();
@@ -85,11 +122,18 @@ namespace TOSCore.Services
             try
             {
                 DataTable dt = new DataTable();
+                if (!string.IsNullOrWhiteSpace(mModel.ConpanyName))
+                    mModel.GroupInfoFlg = "1";
+                else if (!string.IsNullOrWhiteSpace(mModel.BrandName))
+                    mModel.GroupInfoFlg = "2";
+                else mModel.GroupInfoFlg = "3";
+
+                //BaseDL dl = new BaseDL();
                 SqlParameter[] prms = new SqlParameter[9];
                 prms[0] = new SqlParameter("@groupID", SqlDbType.VarChar) { Value = mModel.GroupID };
                 prms[1] = new SqlParameter("@groupName", SqlDbType.VarChar) { Value = mModel.GroupName };
                 prms[2] = new SqlParameter("@groupInfoFlag", SqlDbType.VarChar) { Value = mModel.GroupInfoFlg };
-                if (mModel.ConpanyName != null)
+                if (!string.IsNullOrWhiteSpace(mModel.ConpanyName))
                 {
                     prms[3] = new SqlParameter("@companyName", SqlDbType.VarChar) { Value = mModel.ConpanyName };
                 }
@@ -97,7 +141,7 @@ namespace TOSCore.Services
                 {
                     prms[3] = new SqlParameter("@companyName", SqlDbType.VarChar) { Value = DBNull.Value };
                 }
-                if (mModel.BrandName != null)
+                if (!string.IsNullOrWhiteSpace(mModel.BrandName))
                 {
                     prms[4] = new SqlParameter("@BrandName", SqlDbType.VarChar) { Value = mModel.BrandName };
                 }
@@ -105,7 +149,7 @@ namespace TOSCore.Services
                 {
                     prms[4] = new SqlParameter("@BrandName", SqlDbType.VarChar) { Value = DBNull.Value };
                 }
-                if (mModel.TabName != null)
+                if (!string.IsNullOrWhiteSpace(mModel.TabName))
                 {
                     prms[5] = new SqlParameter("@tag", SqlDbType.VarChar) { Value = mModel.TabName };
                 }
@@ -116,6 +160,61 @@ namespace TOSCore.Services
                 prms[6] = new SqlParameter("@AccessPC", SqlDbType.VarChar) { Value = PcName };
                 prms[7] = new SqlParameter("@insertOperator", SqlDbType.VarChar) { Value = mModel.InsertOperator };
                 prms[8] = new SqlParameter("@saveUpdateFlag", SqlDbType.VarChar) { Value = "Save" };
+                dl.InsertUpdateDeleteData("Group_Entry_Insert", prms);
+                return "success";
+            }
+            catch (Exception ex)
+            {
+                string aa = ex.Message;
+                return "fail";
+            }
+
+        }
+
+        public string UpdateGroup(GroupModel mModel)
+        {
+
+            try
+            {
+                DataTable dt = new DataTable();
+                if (!string.IsNullOrWhiteSpace(mModel.ConpanyName))
+                    mModel.GroupInfoFlg = "1";
+                else if (!string.IsNullOrWhiteSpace(mModel.BrandName))
+                    mModel.GroupInfoFlg = "2";
+                else mModel.GroupInfoFlg = "3";
+
+                //BaseDL dl = new BaseDL();
+                SqlParameter[] prms = new SqlParameter[9];
+                prms[0] = new SqlParameter("@groupID", SqlDbType.VarChar) { Value = mModel.GroupID };
+                prms[1] = new SqlParameter("@groupName", SqlDbType.VarChar) { Value = mModel.GroupName };
+                prms[2] = new SqlParameter("@groupInfoFlag", SqlDbType.VarChar) { Value = mModel.GroupInfoFlg };
+                if (!string.IsNullOrWhiteSpace(mModel.ConpanyName))
+                {
+                    prms[3] = new SqlParameter("@companyName", SqlDbType.VarChar) { Value = mModel.ConpanyName };
+                }
+                else
+                {
+                    prms[3] = new SqlParameter("@companyName", SqlDbType.VarChar) { Value = DBNull.Value };
+                }
+                if (!string.IsNullOrWhiteSpace(mModel.BrandName))
+                {
+                    prms[4] = new SqlParameter("@BrandName", SqlDbType.VarChar) { Value = mModel.BrandName };
+                }
+                else
+                {
+                    prms[4] = new SqlParameter("@BrandName", SqlDbType.VarChar) { Value = DBNull.Value };
+                }
+                if (!string.IsNullOrWhiteSpace(mModel.TabName))
+                {
+                    prms[5] = new SqlParameter("@tag", SqlDbType.VarChar) { Value = mModel.TabName };
+                }
+                else
+                {
+                    prms[5] = new SqlParameter("@tag", SqlDbType.VarChar) { Value = DBNull.Value };
+                }
+                prms[6] = new SqlParameter("@AccessPC", SqlDbType.VarChar) { Value = System.Environment.MachineName };
+                prms[7] = new SqlParameter("@insertOperator", SqlDbType.VarChar) { Value = mModel.InsertOperator };
+                prms[8] = new SqlParameter("@saveUpdateFlag", SqlDbType.VarChar) { Value = "Update" };
                 dl.InsertUpdateDeleteData("Group_Entry_Insert", prms);
                 return "success";
             }
